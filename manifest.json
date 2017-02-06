@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+
+  "name": "QuickTip Chrome extension",
+  "description": "Chrome extension that is used to translate particular words/phrases on site via TranslateAPI",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_popup": "info.html"
+  },
+  "permissions": [
+    "tabs"
+  ]
+}
