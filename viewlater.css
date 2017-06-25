@@ -1,0 +1,48 @@
+body {
+    width: 420px;
+    background-color: #e8e7e2;
+}
+
+h3 {
+    -webkit-text-stroke: 1px #7892c2;
+}
+
+.button {
+    -webkit-border-radius:1px;
+    border-radius:1px;
+    border:1px solid #ffffff;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:8px;
+    padding:1px 2px;
+    text-decoration:none;
+}
+
+.button:active {
+    position:relative;
+    top:1px;
+}
+
+.addButton {
+    -webkit-box-shadow:inset 0px 6px 0px -4px #3a8f29;
+    box-shadow:inset 0px 6px 0px -4px #3a8f29;
+    background-color:#3a8f29;
+    text-shadow:0px 1px 0px #b23e35;
+}
+
+.addButton:hover {
+    background-color:#4b8f29;
+}
+
+.removeButton {
+    -webkit-box-shadow:inset 0px 6px 0px -4px #e67a73;
+    box-shadow:inset 0px 6px 0px -4px #e67a73;
+    background-color:#e4685d;
+    text-shadow:0px 1px 0px #b23e35;
+}
+
+.removeButton:hover {
+    background-color:#eb675e;
+}

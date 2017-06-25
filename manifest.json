@@ -1,14 +1,17 @@
 {
   "manifest_version": 2,
 
-  "name": "QuickTip Chrome extension",
-  "description": "Chrome extension that is used to translate particular words/phrases on site via TranslateAPI",
+  "name": "ViewLater Chrome extension",
+  "description": "Chrome extension that is used to store links in order to revisit them later",
   "version": "1.0",
 
   "browser_action": {
-    "default_popup": "info.html"
+    "default_popup": "index.html"
   },
   "permissions": [
-    "tabs"
+    "tabs", "storage"
+  ],
+  "web_accessible_resources": [
+    "viewlater.css"
   ]
 }
