@@ -1,0 +1,25 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "qWxk0mGRA74ZB2VuybLV/bipePA=",
+			"path": "github.com/fabioberger/chrome",
+			"revision": "e67b78149de75461d5bc8bf7dc77a31a3846abba",
+			"revisionTime": "2017-01-11T14:10:10Z"
+		},
+		{
+			"checksumSHA1": "P3zGmsNjW8m15a+nks4FdVpFKwE=",
+			"path": "github.com/gopherjs/gopherjs/js",
+			"revision": "edbab3ce7c64b93a8f11731207d8546be236b65f",
+			"revisionTime": "2017-01-26T19:09:31Z"
+		},
+		{
+			"checksumSHA1": "Rto/gB41rNf/v1biQr4YD5uUNUs=",
+			"path": "honnef.co/go/js/dom",
+			"revision": "2a9f3d0e9ccd947bf7a2117580517b9662eab924",
+			"revisionTime": "2016-01-08T20:44:09Z"
+		}
+	],
+	"rootPath": "github.com/backedrum/ViewLater"
+}

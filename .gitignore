@@ -33,3 +33,5 @@ _testmain.go
 **/.idea/*
 *.iml
 **/viewlater/*
+/vendor/honnef.co/
+/vendor/github.com/
