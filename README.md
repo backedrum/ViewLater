@@ -17,6 +17,7 @@ govendor fetch honnef.co/go/js/dom
 govendor fetch honnef.co/go/js/dom
 ```
 As result viewlater/ folder will be created. 
+
 4. Go to chrome://extensions/ and click on "Load unpacked extension..." button.
 Navigate to viewlater/ folder and click "Select" button. Extension will be added to you Chrome browser.
 
