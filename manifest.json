@@ -9,7 +9,7 @@
     "default_popup": "index.html"
   },
   "permissions": [
-    "tabs", "storage"
+    "tabs", "storage", "activeTab"
   ],
   "web_accessible_resources": [
     "viewlater.css"
