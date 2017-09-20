@@ -1,8 +1,8 @@
-# ViewLater is a Chrome extension to keep links you want (maybe) to visit later
+# <i>ViewLater</i> is a Chrome extension to keep links you want (maybe) to visit later
 
-ViewLater is inspired by ReadLater extension (https://github.com/napsternxg/ReadLater).
-It allows you to pin the link you would like to visit later. 
-ViewLater Chrome extension is written in Go with the usage of GopherJS.
+ViewLater is inspired by ReadLater extension (https://github.com/napsternxg/ReadLater).<br>
+It allows you to pin the link you would like to visit later. <br>
+ViewLater Chrome extension is written in Go with the usage of GopherJS. <br>
 
 # How to install?
 1. Download the sources.
@@ -24,3 +24,11 @@ Navigate to viewlater/ folder and click "Select" button. Extension will be added
 # How to use?
 When on the tab you want to view later click on ViewLater extension button and press "Add".
 Want to visit previously pinned link? Click on ViewLater extension button and then click on the link to visit.
+Screenshot of the website is created for convenience.
+
+# Problems with gopher.js and vendor
+In case if you hit the issue https://github.com/gopherjs/gopherjs/issues/415
+Please try this workaround from console (from the root of the project):
+>cd vendor <br>
+>ln -s . src <br>
+>cd .. <br>
