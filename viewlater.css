@@ -20,6 +20,7 @@ body {
     width: 420px;
     background-color: #e8e7e2;
     display: grid;
+    min-height: 100%;
     font-family: monospace;
 }
 
