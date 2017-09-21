@@ -71,6 +71,10 @@ func main() {
 		table.AppendChild(row)
 	}
 
+	c.Tabs.CaptureVisibleTab(c.Windows.WINDOW_ID_CURRENT, nil, func(dataUrl string) {
+		screenshot = dataUrl
+	})
+
 	add := d.GetElementByID("addButton").(*dom.HTMLInputElement)
 	add.Call("addEventListener", "click", func(event *js.Object) {
 		row := d.CreateElement("tr").(*dom.HTMLTableRowElement)
@@ -78,11 +82,8 @@ func main() {
 		c.Windows.GetCurrent(chrome.Object{}, func(window chrome.Window) {
 			id := window.Id
 
-			c.Tabs.CaptureVisibleTab(id, nil, func(dataUrl string) {
-				screenshot = dataUrl
-			})
-
 			c.Tabs.GetSelected(id, func(tab chrome.Tab) {
+
 				currentUrl := tab.Url
 
 				nextId := 0
