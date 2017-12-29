@@ -124,11 +124,19 @@ func addTitle(d dom.Document, row *dom.HTMLDivElement, id int, url, desc string)
 	p := d.CreateElement("p").(*dom.HTMLParagraphElement)
 	div.AppendChild(p)
 
+	idStr := strconv.Itoa(id)
+
 	titleLink := d.CreateElement("a").(*dom.HTMLAnchorElement)
-	titleLink.SetID(strconv.Itoa(id))
+	titleLink.SetID(idStr)
 	titleLink.Href = url
 	titleLink.SetInnerHTML(desc)
 	p.AppendChild(titleLink)
+
+	// "hidden" text area that will be used for clipboard copy
+	textArea := d.CreateElement("textarea").(*dom.HTMLTextAreaElement)
+	textArea.SetID("ta-" + idStr)
+	textArea.SetTextContent(url)
+	div.AppendChild(textArea)
 }
 
 func addRowButtons(d dom.Document, rows dom.Element, row *dom.HTMLDivElement, urlId int, url string) {
@@ -144,8 +152,11 @@ func addRowButtons(d dom.Document, rows dom.Element, row *dom.HTMLDivElement, ur
 	copyLink.SetClass("btn btn-default btn-sm btn-light")
 	copyLink.SetInnerHTML("<i class=\"fa fa-clipboard\"></i> Copy")
 	copyLink.Call("addEventListener", "click", func(event *js.Object) {
-		// TODO implement
-		println("Not implemented yet")
+		document := js.Global.Get("document")
+		textArea := document.Call("getElementById", "ta-"+strconv.Itoa(urlId))
+		textArea.Call("select")
+
+		document.Call("execCommand", "copy")
 	})
 	p.AppendChild(copyLink)
 
