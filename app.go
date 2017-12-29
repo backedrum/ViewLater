@@ -27,10 +27,11 @@ import (
 )
 
 type Link struct {
-	Id         int    `json:"id"`
-	Url        string `json:"url"`
-	Title      string `json:"title"`
-	Screenshot string `json:"screenshot"`
+	Id          int    `json:"id"`
+	Url         string `json:"url"`
+	Title       string `json:"title"`
+	Description string `json:"desc"`
+	Screenshot  string `json:"screenshot"`
 }
 
 type LinksList []Link
@@ -46,7 +47,7 @@ func main() {
 	c := chrome.NewChrome()
 	d := dom.GetWindow().Document()
 
-	table := d.GetElementByID("links")
+	rows := d.GetElementByID("links")
 
 	// get json from storage
 	linksJson := storage.Get("readLaterLinks").String()
@@ -59,25 +60,24 @@ func main() {
 	}
 
 	for _, link := range urls {
-		row := d.CreateElement("tr").(*dom.HTMLTableRowElement)
-		urlColumn := d.CreateElement("td").(*dom.HTMLTableCellElement)
-		addRemoveButton(d, table, row, link.Id)
-		row.AppendChild(urlColumn)
-
-		urlColumn.SetAttribute("id", strconv.Itoa(link.Id))
-		urlColumn.SetInnerHTML("<a href=\"" + link.Url + "\">" + link.Title + "</a>")
+		row := d.CreateElement("div").(*dom.HTMLDivElement)
+		row.SetClass("row row-link")
 
 		addScreenshot(d, row, link.Screenshot)
-		table.AppendChild(row)
+		addTitle(d, row, link.Id, link.Url, link.Title)
+		addRowButtons(d, rows, row, link.Id, link.Url)
+
+		rows.AppendChild(row)
 	}
 
 	c.Tabs.CaptureVisibleTab(c.Windows.WINDOW_ID_CURRENT, nil, func(dataUrl string) {
 		screenshot = dataUrl
 	})
 
-	add := d.GetElementByID("addButton").(*dom.HTMLInputElement)
+	add := d.GetElementByID("add-button").(*dom.HTMLAnchorElement)
 	add.Call("addEventListener", "click", func(event *js.Object) {
-		row := d.CreateElement("tr").(*dom.HTMLTableRowElement)
+		row := d.CreateElement("div").(*dom.HTMLDivElement)
+		row.SetClass("row row-link")
 
 		c.Windows.GetCurrent(chrome.Object{}, func(window chrome.Window) {
 			id := window.Id
@@ -91,15 +91,11 @@ func main() {
 					nextId = urls[len(urls)-1].Id + 1
 				}
 
-				addRemoveButton(d, table, row, nextId)
-
-				urlColumn := d.CreateElement("td").(*dom.HTMLTableCellElement)
-				urlColumn.SetAttribute("id", strconv.Itoa(nextId))
-				urlColumn.SetInnerHTML("<a href=\"" + currentUrl + "\">" + tab.Title + "</a>")
-				row.AppendChild(urlColumn)
-
 				addScreenshot(d, row, screenshot)
-				table.AppendChild(row)
+				addTitle(d, row, nextId, currentUrl, tab.Title)
+				addRowButtons(d, rows, row, nextId, currentUrl)
+
+				rows.AppendChild(row)
 
 				urls = append(urls, Link{Id: nextId, Url: currentUrl, Title: tab.Title, Screenshot: screenshot})
 				marshalUrlsToStorage()
@@ -109,41 +105,63 @@ func main() {
 	})
 }
 
-func addScreenshot(d dom.Document, tableRow *dom.HTMLTableRowElement, screenshot string) {
-	screenshotColumn := d.CreateElement("td").(*dom.HTMLTableCellElement)
-
+func addScreenshot(d dom.Document, row *dom.HTMLDivElement, screenshot string) {
 	div := d.CreateElement("div").(*dom.HTMLDivElement)
-	div.Style().Set("height", "90px")
-	div.Style().Set("width", "240px")
+	div.SetClass("col-5 d-flex flex-column")
+	row.AppendChild(div)
 
 	img := d.CreateElement("img").(*dom.HTMLImageElement)
-	img.SetAttribute("src", screenshot)
-	img.Style().Set("max-height", "100%")
-	img.Style().Set("max-width", "100%")
+	img.SetClass("thumbnail")
+	img.Src = screenshot
 	div.AppendChild(img)
-
-	screenshotColumn.AppendChild(div)
-	tableRow.AppendChild(screenshotColumn)
 }
 
-func addRemoveButton(d dom.Document, table dom.Element, tableRow *dom.HTMLTableRowElement, urlId int) {
-	removeButtonColumn := d.CreateElement("td").(*dom.HTMLTableCellElement)
+func addTitle(d dom.Document, row *dom.HTMLDivElement, id int, url, desc string) {
+	div := d.CreateElement("div").(*dom.HTMLDivElement)
+	div.SetClass("col-3 d-flex flex-column")
+	row.AppendChild(div)
 
-	remove := d.CreateElement("input").(*dom.HTMLInputElement)
-	remove.SetAttribute("type", "button")
-	remove.SetAttribute("value", "X")
-	remove.SetClass("button removeButton")
+	p := d.CreateElement("p").(*dom.HTMLParagraphElement)
+	div.AppendChild(p)
 
-	remove.Call("addEventListener", "click", func(event *js.Object) {
-		removeLink(urlId)
-		marshalUrlsToStorage()
-		table.RemoveChild(tableRow)
+	titleLink := d.CreateElement("a").(*dom.HTMLAnchorElement)
+	titleLink.SetID(strconv.Itoa(id))
+	titleLink.Href = url
+	titleLink.SetInnerHTML(desc)
+	p.AppendChild(titleLink)
+}
+
+func addRowButtons(d dom.Document, rows dom.Element, row *dom.HTMLDivElement, urlId int, url string) {
+	// copy row url to clipboard
+	div := d.CreateElement("div").(*dom.HTMLDivElement)
+	div.SetClass("col-4 d-flex flex-column align-items-right text-right")
+	row.AppendChild(div)
+
+	p := d.CreateElement("p").(*dom.HTMLParagraphElement)
+	div.AppendChild(p)
+
+	copyLink := d.CreateElement("a").(*dom.HTMLAnchorElement)
+	copyLink.SetClass("btn btn-default btn-sm btn-light")
+	copyLink.SetInnerHTML("<i class=\"fa fa-clipboard\"></i> Copy")
+	copyLink.Call("addEventListener", "click", func(event *js.Object) {
+		// TODO implement
+		println("Not implemented yet")
 	})
-	removeButtonColumn.AppendChild(remove)
-	tableRow.AppendChild(removeButtonColumn)
+	p.AppendChild(copyLink)
+
+	// remove row
+	removeLink := d.CreateElement("a").(*dom.HTMLAnchorElement)
+	removeLink.SetClass("btn btn-default btn-sm btn-danger")
+	removeLink.SetInnerHTML("<i class=\"fa fa-trash-o\"></i> Delete")
+	removeLink.Call("addEventListener", "click", func(event *js.Object) {
+		removeUrl(urlId)
+		marshalUrlsToStorage()
+		rows.RemoveChild(row)
+	})
+	p.AppendChild(removeLink)
 }
 
-func removeLink(id int) {
+func removeUrl(id int) {
 	modified := LinksList{}
 	for _, link := range urls {
 		if link.Id == id {

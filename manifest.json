@@ -9,9 +9,18 @@
     "default_popup": "index.html"
   },
   "permissions": [
-    "tabs", "storage", "activeTab"
+    "tabs",
+    "storage",
+    "activeTab"
   ],
   "web_accessible_resources": [
-    "viewlater.css"
+    "css/*.css",
+    "js/*.js",
+    "fonts/*.otf",
+    "fonts/*.eot",
+    "fonts/*.svg",
+    "fonts/*.ttf",
+    "fonts/*.woff",
+    "fonts/*.woff2"
   ]
 }
