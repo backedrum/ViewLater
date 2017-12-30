@@ -15,6 +15,12 @@
 			"revisionTime": "2017-11-02T03:40:23Z"
 		},
 		{
+			"checksumSHA1": "r5eQHkttko6kxroDEENXbmXKrSs=",
+			"path": "github.com/nfnt/resize",
+			"revision": "891127d8d1b52734debe1b3c3d7e747502b6c366",
+			"revisionTime": "2016-07-24T20:39:20Z"
+		},
+		{
 			"checksumSHA1": "7l500RHm5kJL9BQehETOIXlSwMU=",
 			"path": "honnef.co/go/js/dom",
 			"revision": "0a64a2db1425c1881d4ec762370250c65f44b85b",

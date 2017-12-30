@@ -28,13 +28,13 @@ section {
     margin-top: 10px;
 }
 img.thumbnail {
-    height: 135px;
-    width: 220px;
+    height: 140px;
+    width: 215px;
     max-height: 100%;
     max-width: 100%;
 }
 body {
-    width: 520px;
+    width: 580px;
     height: 640px;
     min-height: 100%;
     font-family: 'Open Sans', sans-serif;

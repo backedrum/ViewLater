@@ -19,10 +19,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package main
 
 import (
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"github.com/fabioberger/chrome"
 	"github.com/gopherjs/gopherjs/js"
+	"github.com/nfnt/resize"
 	"honnef.co/go/js/dom"
+	"image/jpeg"
 	"strconv"
 )
 
@@ -36,11 +40,17 @@ type Link struct {
 
 type LinksList []Link
 
-var storage = js.Global.Get("localStorage")
+const (
+	THUMBNAIL_IMAGE_WIDTH  = 640
+	THUMBNAIL_IMAGE_HEIGHT = 480
+	IMAGE_DATA_START_INDEX = 23
+)
 
-var urls = LinksList{}
-
-var screenshot = ""
+var (
+	storage    = js.Global.Get("localStorage")
+	urls       = LinksList{}
+	screenshot = ""
+)
 
 func main() {
 
@@ -107,18 +117,18 @@ func main() {
 
 func addScreenshot(d dom.Document, row *dom.HTMLDivElement, screenshot string) {
 	div := d.CreateElement("div").(*dom.HTMLDivElement)
-	div.SetClass("col-5 d-flex flex-column")
+	div.SetClass("col-6 d-flex flex-column")
 	row.AppendChild(div)
 
 	img := d.CreateElement("img").(*dom.HTMLImageElement)
 	img.SetClass("thumbnail")
-	img.Src = screenshot
+	img.Src = resizeScreenshot(screenshot)
 	div.AppendChild(img)
 }
 
 func addTitle(d dom.Document, row *dom.HTMLDivElement, id int, url, desc string) {
 	div := d.CreateElement("div").(*dom.HTMLDivElement)
-	div.SetClass("col-3 d-flex flex-column")
+	div.SetClass("col-4 d-flex flex-column")
 	row.AppendChild(div)
 
 	p := d.CreateElement("p").(*dom.HTMLParagraphElement)
@@ -142,7 +152,7 @@ func addTitle(d dom.Document, row *dom.HTMLDivElement, id int, url, desc string)
 func addRowButtons(d dom.Document, rows dom.Element, row *dom.HTMLDivElement, urlId int, url string) {
 	// copy row url to clipboard
 	div := d.CreateElement("div").(*dom.HTMLDivElement)
-	div.SetClass("col-4 d-flex flex-column align-items-right text-right")
+	div.SetClass("col-2 d-flex flex-column align-items-right text-right")
 	row.AppendChild(div)
 
 	p := d.CreateElement("p").(*dom.HTMLParagraphElement)
@@ -183,6 +193,28 @@ func removeUrl(id int) {
 	}
 
 	urls = modified
+}
+
+func resizeScreenshot(screenshot string) string {
+	decodedBytes, err := base64.StdEncoding.DecodeString(screenshot[IMAGE_DATA_START_INDEX:])
+	if err != nil {
+		println("Cannot decode base64 bytes." + err.Error())
+		return screenshot
+	}
+
+	image, err := jpeg.Decode(bytes.NewReader(decodedBytes))
+	if err != nil {
+		println("Cannot decode screenshot image." + err.Error())
+		return screenshot
+	}
+
+	resizedImage := resize.Resize(THUMBNAIL_IMAGE_WIDTH, THUMBNAIL_IMAGE_HEIGHT, image, resize.Lanczos3)
+
+	var buf bytes.Buffer
+
+	jpeg.Encode(&buf, resizedImage, nil)
+
+	return "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(buf.Bytes())
 }
 
 func marshalUrlsToStorage() {
