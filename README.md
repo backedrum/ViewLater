@@ -10,7 +10,7 @@ ViewLater Chrome extension is written in Go with the usage of GopherJS. <br>
 
 **Update 2:** Screenshots are resized in order to minimize storage size.   
 
-<img width="439" alt="screen shot 2017-09-21 at 12 12 29 am" src="https://user-images.githubusercontent.com/3159236/30670837-4772ce7c-9e64-11e7-9a69-d7fa4dac4aa9.png"/>
+<img width="564" alt="screen shot 2017-12-31 at 12 14 07 am" src="https://user-images.githubusercontent.com/3159236/34457900-d3655710-edbf-11e7-8a64-410112b152cc.png">
 
 # How to install?
 1. Download the sources.
