@@ -73,7 +73,7 @@ func main() {
 		row := d.CreateElement("div").(*dom.HTMLDivElement)
 		row.SetClass("row row-link")
 
-		addScreenshot(d, row, link.Screenshot)
+		addScreenshot(d, row, link.Screenshot, false)
 		addTitle(d, row, link.Id, link.Url, link.Title)
 		addRowButtons(d, rows, row, link.Id, link.Url)
 
@@ -101,7 +101,7 @@ func main() {
 					nextId = urls[len(urls)-1].Id + 1
 				}
 
-				addScreenshot(d, row, screenshot)
+				addScreenshot(d, row, screenshot, true)
 				addTitle(d, row, nextId, currentUrl, tab.Title)
 				addRowButtons(d, rows, row, nextId, currentUrl)
 
@@ -115,14 +115,20 @@ func main() {
 	})
 }
 
-func addScreenshot(d dom.Document, row *dom.HTMLDivElement, screenshot string) {
+func addScreenshot(d dom.Document, row *dom.HTMLDivElement, screenshot string, newScreenshot bool) {
 	div := d.CreateElement("div").(*dom.HTMLDivElement)
 	div.SetClass("col-6 d-flex flex-column")
 	row.AppendChild(div)
 
 	img := d.CreateElement("img").(*dom.HTMLImageElement)
 	img.SetClass("thumbnail")
-	img.Src = resizeScreenshot(screenshot)
+
+	if newScreenshot {
+		img.Src = resizeScreenshot(screenshot)
+	} else {
+		img.Src = screenshot
+	}
+
 	div.AppendChild(img)
 }
 
